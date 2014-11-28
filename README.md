@@ -13,9 +13,9 @@ When you start this small app press the `START ACTIVITY A` button on the MainAct
 
 If I then press `SWITCH TO ACTIVITY A` the following code will be executed:
 
-                Intent intent = new Intent(B.this, A.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
+      Intent intent = new Intent(B.this, A.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+      startActivity(intent);
 
 And the activity stack looks like this:
 
@@ -30,16 +30,16 @@ Exactly what I want. You can press the `NORMAL SWITCH -> A` and `NORMAL SWITCH -
 
 Okay, here's the catch. When you click the `SWITCH -> B WITH PENDING INTENT` button I create a pending intent like this and add it as an intent extra:
 
-                Intent switchBackToMeIntent = getIntent();
-                switchBackToMeIntent.setAction(Long.toString(System.currentTimeMillis()));
-                switchBackToMeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+      Intent switchBackToMeIntent = getIntent();
+      switchBackToMeIntent.setAction(Long.toString(System.currentTimeMillis()));
+      switchBackToMeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(A.this, 0, switchBackToMeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+      PendingIntent pendingIntent = PendingIntent.getActivity(A.this, 0, switchBackToMeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                Intent intent = new Intent(A.this, B.class);
-                intent.putExtra(B.INTENT_EXTRA_PENDINGINTENT, pendingIntent);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
+      Intent intent = new Intent(A.this, B.class);
+      intent.putExtra(B.INTENT_EXTRA_PENDINGINTENT, pendingIntent);
+      intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+      startActivity(intent);
 
 All's fine here, the stack still looks like this:
 
@@ -50,13 +50,13 @@ All's fine here, the stack still looks like this:
 
 But now, when you click on the `SWITCH -> A BY PENDINGINTENT.SEND()` button in activity B I use the PendingIntent extra like this:
 
-                if (mPendingIntent != null) {
-                    try {
-                        mPendingIntent.send();
-                    } catch (PendingIntent.CanceledException e) {
-                        Log.e("B", "Pending intent was cancelled", e);
-                    }
-                }
+     if (mPendingIntent != null) {
+         try {
+             mPendingIntent.send();
+         } catch (PendingIntent.CanceledException e) {
+             Log.e("B", "Pending intent was cancelled", e);
+         }
+     }
 
 Then the mess starts... It looks like the `Intent.FLAG_ACTIVITY_REORDER_TO_FRONT` flag is ignored and I get this stack:
 
