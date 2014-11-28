@@ -46,7 +46,6 @@ public class B extends ActionBarActivity {
             public void onClick(View v) {
                 if (mPendingIntent != null) {
                     try {
-                        Log.d("B", "About to send " + mPendingIntent.toString());
                         mPendingIntent.send();
                     } catch (PendingIntent.CanceledException e) {
                         Log.e("B", "Pending intent was cancelled", e);
